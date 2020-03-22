@@ -1,0 +1,71 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/** 
+ * Category layered navigation
+ *
+ * @see Mage_Catalog_Block_Layer_View
+ */
+?>
+<?php if($this->canShowBlock()): ?>
+
+<?php
+$_gifthelper = Mage::helper('giftcollection');
+// $_gifthelper->unsetGiftCollectionSession();
+// echo '<pre>'.print_r($_gifthelper->getGiftCollectionSession(),true).'</pre>';
+?>
+
+<div class="block block-layered-nav">
+<link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <div class="block-title">
+          <h6 class="first-ltr-title">Your</h6>
+          <h1 class="main-side-title">gift </h1>
+          <strong><span class="main-side-title-tag"> Add Gift by clicking the "Add to Gift" button. </span></strong>
+    </div>
+     <div class="block-content">
+          <form action="<?php echo Mage::getUrl('giftcollection/create',true); ?>" method="POST" id="gift-collection">
+               <div class="gifts-multiproduct-holder">
+                    <div class="giftproduct-holder holder1">
+                         
+                    </div>
+                    <div class="giftproduct-holder holder2">
+                         
+                    </div>
+                    <div class="giftproduct-holder holder3">
+                         
+                    </div>
+               </div>
+               <input type="hidden" name="collection-name" value="" class="collection-name-hidden">
+               <div class="continue-holder">
+                    <span class="gift-continue-btn btn-1" id="btn-step-1" data-next="h-step-2">Continue</span>
+                    <span href="javascript:void(0)" class="gift-continue-btn" id="btn-step-2" data-next="h-step-3">Continue</span>
+                    <button class="add-gift-to-cart disabled" id="btn-step-3">Add to Gift</button>
+               </div>
+          </form>
+     </div>
+</div>
+<?php endif; ?>

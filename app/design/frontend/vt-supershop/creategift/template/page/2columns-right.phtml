@@ -1,0 +1,138 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLang() ?>" lang="<?php echo $this->getLang() ?>">
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<?php 
+    global $var_vttheme;
+    $l = $var_vttheme->getParam('layout_home');   
+    $ls=  $var_vttheme->getParam('layoutfb');    
+?>
+    <body class="<?php echo 'layoutfb'.$ls.' '; echo "home-0".$l; echo $this->getBodyClass() ?>">
+    <?php echo $this->getChildHtml('after_body_start') ?>
+        <div  id="box-wrapper">
+            <?php echo $this->getChildHtml('global_notices') ?>
+            <div id="box-header">
+                <?php echo $this->getChildHtml('header') ?>
+            </div>
+            <div id="box-content" style="padding-bottom:0px;">   
+            
+               <div class="container">
+                     <div class ="row">
+                         <?php if ($cms =='home-02') { ?>
+                         <div class="slide-placeleft"> &nbsp </div>
+                         <?php } ?>
+                         <div class="slide-placeright">
+                              <?php if ($this->getChildHtml('slideshow')) { ?>
+                              <div class="box-slideshow"> 
+                                   <?php echo $this->getChildHtml('slideshow'); ?>   
+                              </div>  
+                              <?php } ?>
+                         </div>
+                    </div>
+               </div>        
+               
+                <div class="container">
+                    <div class="row">
+                         <div class="row">
+                        <div class="main-container col2-right-layout" style="padding-bottom:50px;">
+                            <div class="main">   
+                            
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-steps-header">
+                                   <div class="header-gift-steps">
+                                        <div class="h-step h-step-1 active" data-step="#gift-step-1" data-btn="#btn-step-1">
+                                             <span class="h-step-title">Step 1</span>
+                                             <span class="h-step-tagline"><b>Select 3 or more items</b> from the list of  well loved Phiten products below then click "Continue".</span>
+                                        </div>
+                                        <div class="h-step h-step-2" data-step="#gift-step-2" data-btn="#btn-step-2">
+                                             <span class="h-step-title">Step 2</span>
+                                             <span class="h-step-tagline"><b>Choose best products </b> from MS-Empire.</span>
+                                        </div>
+                                        <div class="h-step h-step-3" data-step="#gift-step-3" data-btn="#btn-step-3">
+                                             <span class="h-step-title">Step 3</span>
+                                             <span class="h-step-tagline"><b>Review and Checkout </b> name your gift and add gift to cart.</span>
+                                        </div>
+                                   </div>
+                                </div>
+                                <?php echo $this->getChildHtml('breadcrumbs') ?>                                
+                                
+                                <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 col-main">
+                                    <?php echo $this->getChildHtml('global_messages') ?>
+                                   
+                                   <div class="gift-steps">
+                                        <div class="step step-1" id="gift-step-1">
+                                             <?php echo $this->getChildHtml('content') ?> 
+                                        </div>
+                                        <div class="step step-2" id="gift-step-2">
+                                              <?php echo $this->getChildHtml('samplecontent') ?>
+                                        </div>
+                                        <div class="step step-3" id="gift-step-3">
+                                             Give a name to your gift selection
+                                             
+                                             <input type="text" class="collection_name" maxlength="27">
+                                             <button class="add-gift-to-cart disabled not-hide">Add Gift to Cart</button>
+                                        </div>
+                                   </div>
+                                   
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 col-right">
+                                    <?php echo $this->getChildHtml('right') ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div id="box-footer">
+                <?php if ($this->getChildHtml('position-13') &&  $l==2) : ?>
+                <div class="position-13">
+                    <div class="container">
+                        <div class="row">
+                            <div class="row">
+                            <?php echo $this->getChildHtml('position-13'); ?>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>    
+                <?php endif; ?>
+            <?php echo $this->getChildHtml('footer') ?>
+            </div>
+            <?php echo $this->getChildHtml('global_cookie_notice') ?>
+            <?php echo $this->getChildHtml('before_body_end') ?>   
+        </div>
+    <?php echo $this->getAbsoluteFooter() ?>
+    </body>
+</html>

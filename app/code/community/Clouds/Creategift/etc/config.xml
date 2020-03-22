@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+ 
+<config>
+
+    <modules>
+        <Clouds_Creategift>
+            <version>0.1.0</version>
+        </Clouds_Creategift>
+    </modules>
+    
+    <frontend>
+        <routers>
+            <Clouds_creategift_SomeFreeRouterName1>
+                <use>standard</use>
+                <args>
+                    <module>Clouds_Creategift</module>
+                    <frontName>giftcollection</frontName>
+                </args>
+            </Clouds_creategift_SomeFreeRouterName1>
+        </routers>
+    </frontend> 
+
+     <global>
+          <models>
+               <giftcollection>
+                    <class>Clouds_Creategift_Model</class>
+                    <resourceModel>giftcollection_resource</resourceModel>
+               </giftcollection>
+               <giftcollection_resource>
+                    <class>Clouds_Creategift_Model_Resource</class>
+                    <entities>
+                         <giftcollection>
+                              <table>user_collections_products</table>
+                         </giftcollection>
+                    </entities>
+               </giftcollection_resource>
+          </models>
+          
+          <helpers>
+               <giftcollection>
+                    <class>Clouds_Creategift_Helper</class>
+               </giftcollection>
+          </helpers>
+        
+     </global>
+     
+</config>

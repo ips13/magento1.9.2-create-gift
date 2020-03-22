@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<default>
+		<reference name="head">
+			<action method="removeItem"><type>js</type><name>vt/flycart/flycart.js</name></action>
+			<action method="addJs"><script>vt/creategift/flycart-gift.js</script><params><![CDATA[name="zjs_last"]]></params></action>
+               <action method="addItem"><type>skin_css</type><name>vt/creategift/css/flycart-gift.css</name></action>	 
+		</reference>
+	</default>
+</layout> 

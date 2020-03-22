@@ -1,0 +1,249 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+?>
+<?php
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+?>
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+
+    <div class="toolbar-top">
+        <?php echo $this->getToolbarHtml() ?>
+         <script type="text/javascript">          
+            jQuery(document).ready(function($){
+               $('.toolbar-top .selected-limiter').click(function(){
+                $('.toolbar-top .select-limiter').toggleClass('current-item');
+                });
+                $('.toolbar-top .selected-order').click(function(){
+                    $('.toolbar-top .select-order').toggleClass('current-item');
+                });
+            });
+        </script>
+    </div> 
+   
+    <?php // List mode ?>
+    <?php if($this->getMode()!='grid'): ?>
+   
+    <ol class="products-list">
+    <?php 
+        $i=0;
+        foreach ($_productCollection as $_product): 
+        $i++;    
+        $now = date("Y-m-d H:m:s");
+        $newsFrom= $_product->getNewsFromDate();
+        $newsTo=  $_product->getNewsToDate();
+        $specialprice = Mage::getModel('catalog/product')->load($_product->getId())->getSpecialPrice(); 
+        $special_from_date = $_product->getSpecialFromDate();
+        $special_to_date = $_product->getSpecialToDate();        
+    ?>
+        <li class="item giftpro_<?php echo $_product->getId(); ?>">     
+            <div class="inner-item <?php if($i%2==0){ echo 'border-none'; } ?>">      
+                <div class="item-image">
+                    <?php                          
+                        if($newsFrom != ''){                            
+                        if (($now>=$newsFrom && $now<=$newsTo)||($now>=$newsFrom && $newsTo =='')){  ?>
+                            <div class='new-item'><?php echo $this->__("new");?></div>
+                        <?php }
+                        }else{
+                        if(($newsTo != "") && $newsTo >= $now){ 
+                        ?>
+                            <div class='new-item'><?php echo $this->__("new");?></div>
+                        <?php }
+                        }
+                    ?>  
+                    <?php 
+                    if (($specialprice && ($special_from_date <= $now) && ($special_to_date >= $now || $special_to_date =="" ))){?>
+                        <div class='sale-item'>
+                            <span><?php
+                            $saleof= abs(($specialprice/($_product->getPrice()))*100-100);?>
+                            <?php   print_r(floor($saleof)); ?>%</span>
+                            <span><?php echo $this->__("off");?></span>
+                        </div>
+                    <?php } ?>
+                    
+                    <div class="inner"> 
+                    <a class="product-image" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>">  
+                       <img class="first_image" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(230,276); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /> 
+                    </a>                
+                    </div>        
+                </div> 
+               
+                <div class="product-shop">
+                    <div class="inner">
+                        <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+                        <h2 class="product-name"><a class="product-image" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName() , 'name'); ?></a></h2>     
+                        <?php echo $this->getPriceHtml($_product, true) ?>
+
+                        <?php if($_product->getRatingSummary()): ?>
+                        <?php echo $this->getReviewsSummaryHtml($_product,'short') ?>
+                        <?php endif; ?>
+                        <?php if($_product->getSku()): ?>
+                        <div class="wrap-sku">
+                            <label><?php echo $this->__("Item Code: "); ?></label><span><?php echo $_product->getSku();?></span>
+                        </div>
+                        <?php endif; ?>
+                        <div class="wrap-pio">                       
+                            <?php if($_product->isSaleable()): ?>
+                                <label><?php echo $this->__("Availability: "); ?></label><span class="ins">In stock</span>
+                            <?php else: ?>
+                               <label><?php echo $this->__("Availability: "); ?></label><span class="ous">Out stock</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="desc std">
+                            <?php //echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>
+                            <?php echo Mage::helper('core/string')->truncate($_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description'), 230); ?>
+                        </div>
+                        <div class="wrap-btn-prolist">
+                            <?php if($_product->isSaleable()): ?>
+                            <a title="<?php echo $this->__('Add to gift') ?>" class="btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><?php echo $this->__('Add to gift') ?></span></a>
+                            <?php else: ?>
+                                <a href="#" class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></a>
+                            <?php endif; ?>
+                            
+                        </div>
+                    </div>
+                </div>            
+            </div> 
+        </li>
+    <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+
+    <?php else: ?>
+
+    <?php // Grid Mode ?>
+
+    <?php $_collectionSize = $_productCollection->count() ?>
+    <?php if($_GET['prorow']):?>
+    <?php  $_columnCount=$_GET['prorow']?>
+    <?php else:?>
+        <?php if(Mage::getStoreConfig('supershop_cfg/general/Count_colunm_listing')):?>
+        <?php $_columnCount = Mage::getStoreConfig('supershop_cfg/general/Count_colunm_listing');?>
+        <?php else:?>
+        <?php $_columnCount = $this->getColumnCount(); ?>
+        <?php endif;?>
+    <?php endif;?>
+    <ul class="products-grid row product-grid<?php echo $_columnCount ?>-col">
+    <?php $i=0; foreach ($_productCollection as $_product): 
+        $now = date("Y-m-d H:m:s");
+        $newsFrom= $_product->getNewsFromDate();
+        $newsTo=  $_product->getNewsToDate();
+        $specialprice = Mage::getModel('catalog/product')->load($_product->getId())->getSpecialPrice(); 
+        $special_from_date = $_product->getSpecialFromDate();
+        $special_to_date = $_product->getSpecialToDate();        
+    ?>
+        <?php //if ($i++%$_columnCount==0): ?>
+        
+        <?php //endif ?>
+            <li class="col-lg-<?php echo 12/$_columnCount; ?> col-md-<?php echo 12/$_columnCount; ?> col-sm-<?php echo 12/$_columnCount + 2; ?> col-xs-12 item giftpro_<?php echo $_product->getId(); ?>">
+                <?php   
+                if($newsFrom != ''){                            
+                if (($now>=$newsFrom && $now<=$newsTo)||($now>=$newsFrom && $newsTo =='')){  ?>
+                    <div class='new-item'><?php echo $this->__("new"); ?></div>
+                <?php }
+                }else{
+                if(($newsTo != "") && $newsTo >= $now){ 
+                ?>
+                    <div class='new-item'><?php echo $this->__("new"); ?></div>
+                <?php }
+                }?>
+                <?php 
+                if (($specialprice && ($special_from_date <= $now) && ($special_to_date >= $now || $special_to_date =="" ))){?>
+                    <div class='sale-item'>
+                        <span class="first"><?php
+                        $saleof= abs(($specialprice/($_product->getPrice()))*100-100);?>
+                        <?php   print_r(floor($saleof)); ?>%</span><span><?php echo $this->__("off");?></span>
+                    </div>
+                <?php } ?>  
+                
+                <div class="item-wrap">  
+                    <div class="item-image">                        
+                        <a class="product-image product-image-w"  href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                            <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(230,276); ?>" width="230" height="276" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                        </a>
+                        <?php if($_product->isSaleable()): ?>
+                         <a title="<?php echo $this->__('Add to gift') ?>" class="btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><?php echo $this->__('Add to gift') ?></span></a>
+                        <?php else: ?>
+                         <a href="#" class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></a>
+                        <?php endif; ?>
+                        </div>
+                  
+                        <div class="pro-info">    
+                            <div class="pro-inner">                              
+                                <div class="pro-title product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></div>
+                                <div class="pro-content">
+                                    <div class="wrap-price"> 
+                                        <?php echo $this->getPriceHtml($_product, true) ?>
+                                    </div>  
+                                    <?php if($_product->getRatingSummary()): ?>
+                                    <?php echo $this->getReviewsSummaryHtml($_product,'short',true) ?>
+                                    <?php  endif;  ?>          
+                                </div>
+                            </div>                               
+                        </div>    
+                </div>        
+                
+            </li>
+        <?php //if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+        
+        <?php //endif ?>
+        <?php endforeach ?>
+        </ul>
+        <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php endif; ?>
+
+    <div class="toolbar-bottom">        
+        <?php echo $this->getToolbarHtml() ?>
+        <script type="text/javascript">          
+            jQuery(document).ready(function($){
+               $('.toolbar-bottom .selected-limiter').click(function(){
+                $('.toolbar-bottom .select-limiter').toggleClass('current-item');
+                });
+                $('.toolbar-bottom .selected-order').click(function(){
+                    $('.toolbar-bottom .select-order').toggleClass('current-item');
+                });
+            });
+        </script>
+    </div>
+<?php endif; ?>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+width=jQuery('.item-image').width();
+height=width*1.2;
+jQuery('.product-image-w').css('height',height);
+jQuery('.product-image-w').css('width',width);
+})
+</script>

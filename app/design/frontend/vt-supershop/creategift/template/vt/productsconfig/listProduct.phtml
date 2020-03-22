@@ -1,0 +1,115 @@
+<?php
+/*------------------------------------------------------------------------
+ # VT Products - Version 1.0
+ * Copyright (C) 2013 The VT Theme. All Rights Reserved.
+ * @license - GNU/GPL, http://www.gnu.org/licenses/gpl.html
+ * Author: VT Theme
+ * Websites: http://www.vttheme.com
+-------------------------------------------------------------------------*/
+$categoryList = $this->getListCategoriesFilter();
+$_productCollection = $this->getLoadedProductCollection();
+$_helper = $this->helper('catalog/output');
+$uniqued = rand().time();
+
+$imgWidth = $this->product_image_width;
+$imgHeight = $this->product_image_height;
+
+if ($imgWidth <= 0 || $imgHeight <= 0){
+	$this->product_image_disp = false;
+}
+
+?>
+<?php if(!$_productCollection->count()): ?>
+	<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+
+
+<div id="vt_slider<?php echo $uniqued; ?>" class="block vt-slider sample-products">
+	<div class="slider-inner">
+    	<div class="block-title-slider">
+    		<?php if($this->title!="") : ?>
+    			<h3><?php echo $this->title;?></h3>
+			<?php endif; ?>
+    		<?php if($this->pretext!="") : ?>
+    			<p class="pretext"><?php echo $this->pretext;?></p>
+			<?php endif; ?>					
+    	</div>
+	    <div class="container-slider">
+		    <div class="products-grid">
+		    <?php foreach($_productCollection as $_product) : ?>
+		        <?php
+		        $now = date("Y-m-d H:m:s");
+		        $newsFrom= $_product->getNewsFromDate();
+		        $newsTo=  $_product->getNewsToDate();
+		        $specialprice = Mage::getModel('catalog/product')->load($_product->getId())->getSpecialPrice(); 
+		        $special_from_date = $_product->getSpecialFromDate();
+		        $special_to_date = $_product->getSpecialToDate();    
+		        ?>
+		        <div class="item col-lg-3 col-md-3 col-sm-4 giftpro_<?php echo $_product->getId(); ?>"> 
+		        	<?php   
+		                if($newsFrom != ''){                            
+		                if (($now>=$newsFrom && $now<=$newsTo)||($now>=$newsFrom && $newsTo =='')){  ?>
+		                    <div class='new-item'><?php echo $this->__("new"); ?></div>
+		                <?php }
+		                }else{
+		                if(($newsTo != "") && $newsTo >= $now){ 
+		                ?>
+		                    <div class='new-item'><?php echo $this->__("new"); ?></div>
+		                <?php }
+		                }?>
+		                <?php 
+		                if (($specialprice && ($special_from_date <= $now) && ($special_to_date >= $now || $special_to_date =="" ))){?>
+		                    <div class='sale-item'>
+		                        <span class='first'><?php
+		                        $saleof= abs(($specialprice/($_product->getPrice()))*100-100);?>
+		                        <?php   print_r(floor($saleof)); ?>%</span><span><?php echo $this->__("off");?></span>
+		                    </div>
+		             <?php } ?>  
+					<div class="item-wrap">
+                    <div class="item-image">   
+                        <a class="product-image" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>">
+                        <img class="first_image" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($imgWidth,$imgHeight); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /> 
+                        </a>
+                        <?php if($_product->isSaleable()): ?>
+                            <a title="<?php echo $this->__('Add to gift') ?>" class="btn-cart" data-onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><?php echo $this->__('Add to Gift') ?></a>
+                        <?php else: ?>
+                            <a href="#" class="availability out-of-stock"><?php echo $this->__('Out of stock') ?></a>
+                        <?php endif; ?>
+                    </div>   
+                       
+                    <div class="pro-info">
+                        <div class="pro-inner">
+                           <div class="pro-title product-name"><a href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->escapeHtml($_product->getName()) ?></a></div>    
+                           <div class="pro-content">    
+                                <div class="wrap-price"> 
+                                <?php echo $this->getPriceHtml($_product, true) ?> 
+                                </div>
+                                 <?php echo $this->getReviewsSummaryHtml($_product,'short',true) ?>
+                           </div>
+                        </div>                                                                        
+                    </div>
+                    
+                </div><!--end item wrap -->
+		        </div>
+		    <?php endforeach; ?>
+		    </div>
+		</div>
+		
+	</div>
+</div>
+<div class="toolbar-bottom">        
+        <?php echo $this->getToolbarHtml() ?>
+        <script type="text/javascript">          
+            jQuery(document).ready(function($){
+               $('.toolbar-bottom .selected-limiter').click(function(){
+                $('.toolbar-bottom .select-limiter').toggleClass('current-item');
+                });
+                $('.toolbar-bottom .selected-order').click(function(){
+                    $('.toolbar-bottom .select-order').toggleClass('current-item');
+                });
+            });
+        </script>
+    </div>
+
+
+<?php endif; ?>

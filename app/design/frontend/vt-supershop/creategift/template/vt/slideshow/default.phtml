@@ -1,0 +1,52 @@
+<?php
+/*------------------------------------------------------------------------
+ # VT RevolutionSlider - Version 1.0
+ * Copyright (C) 2013 The VT Theme. All Rights Reserved.
+ * @license - GNU/GPL, http://www.gnu.org/licenses/gpl.html
+ * Author: VT Theme
+ * Websites: http://www.vtthemepro.com
+-------------------------------------------------------------------------*/
+global $var_vttheme; 
+$config = $this->getConfigObject();
+$uq = rand().time();
+$l = $var_vttheme->getParam('layout_home');
+?>
+<script type="text/javascript">
+		jQuery(document).ready(function($) {			
+		  $('#vt_slideshow<?php echo $uq ?>').revolution({
+			 delay:<?php echo ($config['delay']); ?>,
+			 startwidth:<?php if($l==1){ echo "1170";}else if($l==2){ echo "880";}else if($l==3){ echo "770";} ?>,
+			 startheight:<?php if($l==1){ echo "535"; }else if($l==2){ echo "390"; }else if($l==3){ echo "360";} ?>,
+	 		 navigationArrows:"<?php echo ($config['navigationArrows']); ?>", 
+			 navigationType:"<?php echo ($config['navigationType']); ?>", 
+			 navigationStyle:"<?php echo ($config['navigationStyle']); ?>",
+	 		<?php if(!$config['autoplay']){?>
+	 		 stopAtSlide:1,
+	 		 stopAfterLoops:0,
+	 		<?php } ?>			 
+		  });
+	   });
+</script>
+	<?php if (!empty( $config['pretext'] )): ?>
+		<div class="vt-pretext"><?php echo $config['pretext']; ?></div>
+	<?php endif; ?>
+	<?php 
+     
+     $config['slides_html'] = 'create-gift-page-banner';
+     
+	$slides = explode(',', $config['slides_html']);
+	if(count($slides) > 0){
+	?>
+    <div class="vt-slideshow" id="vt_slideshow<?php echo $uq ?>">
+		<ul>
+    	<?php 
+    	for($i=0;$i<count($slides);$i++) {
+    		echo str_replace('</ul>', '', str_replace('<ul>', '', $this->getLayout()->createBlock('cms/block')->setBlockId(trim($slides[$i]))->toHtml()));
+    	}?>
+		</ul>
+		<div class="tp-bannertimer<?php echo ($config['timerbar']=='bottom')?' tp-bottom':'';?>"></div>
+    </div>
+    <?php } ?>
+    <?php if($config['posttext']): ?>
+    <div class="vt-posttext"><?php echo $config['posttext'];?></div>
+    <?php endif;?>
